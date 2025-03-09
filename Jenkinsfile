@@ -48,16 +48,19 @@ pipeline {
             }
         }
         
-        stage('Build Docker Image') {
+        stage('Build and Deploy') {
+            agent {
+                docker {
+                    image 'docker:20.10'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                    reuseNode true
+                }
+            }
             steps {
                 // Build Docker image
                 sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
+                
                 // Stop and remove existing container if it exists
                 sh "docker stop ${CONTAINER_NAME} || true"
                 sh "docker rm ${CONTAINER_NAME} || true"
