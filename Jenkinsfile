@@ -68,7 +68,10 @@ pipeline {
         stage('Health Check') {
             steps {
                 // Wait for the application to start
-                sh 'sleep 10'
+                sh 'sleep 30'
+
+        	// Print container logs to debug
+        	sh "docker logs ${CONTAINER_NAME}"
                 
                 // Check if the application is healthy
                 sh 'curl -f http://localhost:3000/health || exit 1'
