@@ -1,17 +1,13 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
-const app = require('../app');
+const { app, server } = require('../server');
 
 describe('API Tests', () => {
-  let server;
+  // No need to start a server since we can use the app instance directly
   
-  before(() => {
-    // Starting a server for testing on a different port
-    server = app.listen(3001);
-  });
-
   after((done) => {
+    // Close the server after tests
     server.close(done);
   });
   
