@@ -36,9 +36,15 @@ pipeline {
         
         stage('Code Quality Check') {
             steps {
-                // Simple code quality check (install eslint if needed)
-                sh 'npm list eslint || npm install eslint --save-dev'
-                sh 'npx eslint . || true'
+               // Simple code quality check with proper error handling
+        	script {
+            		sh '''
+            		npm list eslint || npm install eslint --save-dev
+            		mkdir -p .eslintrc || true
+            		echo '{"extends": "eslint:recommended", "env": {"node": true, "mocha": true}}' > .eslintrc
+            		npx eslint . || echo "ESLint warnings found but continuing the pipeline"
+            		'''
+        	}
             }
         }
         
