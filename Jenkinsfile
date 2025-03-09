@@ -40,9 +40,12 @@ pipeline {
         	script {
             		sh '''
             		npm list eslint || npm install eslint --save-dev
-            		mkdir -p .eslintrc || true
-            		echo '{"extends": "eslint:recommended", "env": {"node": true, "mocha": true}}' > .eslintrc
-            		npx eslint . || echo "ESLint warnings found but continuing the pipeline"
+            		# Create a simple config file if one doesn't exist
+            		if [ ! -f .eslintrc.json ] && [ ! -f .eslintrc.js ]; then
+                		echo '{"env":{"node":true,"mocha":true},"extends":"eslint:recommended"}' > .eslintrc.json
+            		fi
+            		# Run ESLint but don't fail the build if it has warnings
+            		npx eslint . || echo "ESLint issues found but continuing pipeline"
             		'''
         	}
             }
