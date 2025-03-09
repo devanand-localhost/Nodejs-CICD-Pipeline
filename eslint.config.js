@@ -1,15 +1,15 @@
 // eslint.config.js
 module.exports = [
   {
-    env: {
-      node: true,
-      mocha: true,
-      es2021: true,
-    },
-    extends: 'eslint:recommended',
-    parserOptions: {
+    languageOptions: {
+      globals: {
+        ...require('globals').node, // Node.js globals
+        ...require('globals').mocha, // Mocha globals
+        ...require('globals').es2021, // ES2021 globals
+      },
       ecmaVersion: 'latest',
     },
+    extends: 'eslint:recommended',
     rules: {
       'no-console': 'off',
       indent: ['warn', 2],
