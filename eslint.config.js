@@ -1,10 +1,10 @@
 // eslint.config.js
-import nodeGlobals from 'globals/node';
-import mochaGlobals from 'globals/mocha';
-import es2021Globals from 'globals/es2021';
-import eslintRecommended from '@eslint/js';
+const nodeGlobals = require('globals/node');
+const mochaGlobals = require('globals/mocha');
+const es2021Globals = require('globals/es2021');
+const eslintRecommended = require('@eslint/js');
 
-export default [
+module.exports = [
   {
     languageOptions: {
       globals: {
