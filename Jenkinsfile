@@ -48,20 +48,23 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker image
-                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                script {
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
             }
         }
         
         stage('Deploy') {
             steps {
-                // Stop and remove existing container if it exists
-                sh "docker stop ${CONTAINER_NAME} || true"
-                sh "docker rm ${CONTAINER_NAME} || true"
-                
-                // Run the new container
-                sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                script {
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        sh "docker stop ${CONTAINER_NAME} || true"
+                        sh "docker rm ${CONTAINER_NAME} || true"
+                        sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    }
+                }
             }
         }        
         
