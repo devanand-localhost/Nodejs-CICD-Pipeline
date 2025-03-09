@@ -35,35 +35,27 @@ pipeline {
         }
         
         stage('Code Quality Check') {
-            steps {
-               // Simple code quality check with proper error handling
-        	script {
-            		sh '''
-            		npm list eslint || npm install eslint --save-dev
-            		# Create a simple config file if one doesn't exist
-            		if [ ! -f .eslintrc.json ] && [ ! -f .eslintrc.js ]; then
-                		echo '{"env":{"node":true,"mocha":true},"extends":"eslint:recommended"}' > .eslintrc.json
-            		fi
-            		# Run ESLint but don't fail the build if it has warnings
-            		npx eslint . || echo "ESLint issues found but continuing pipeline"
-            		'''
-        	}
-            }
-        }
-        
-        stage('Build and Deploy') {
-            agent {
-                docker {
-                    image 'docker:20.10'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                    reuseNode true
-                }
-            }
+      		steps {
+        		sh '''
+          		# Install ESLint if not already installed
+          		npm list eslint || npm install eslint --save-dev
+
+          		# Run ESLint using the existing eslint.config.js
+          		npx eslint . || echo "ESLint issues found but continuing pipeline"
+        		'''
+      		}    
+	}
+
+        stage('Build Docker Image') {
             steps {
                 // Build Docker image
                 sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
-                
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
                 // Stop and remove existing container if it exists
                 sh "docker stop ${CONTAINER_NAME} || true"
                 sh "docker rm ${CONTAINER_NAME} || true"
@@ -71,7 +63,7 @@ pipeline {
                 // Run the new container
                 sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}"
             }
-        }
+        }        
         
         stage('Health Check') {
             steps {

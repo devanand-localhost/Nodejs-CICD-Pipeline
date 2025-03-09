@@ -9,6 +9,11 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    'no-console': 'off'
+    // Basic rules
+    'no-console': 'off',
+    'indent': ['warn', 2],
+    'linebreak-style': ['warn', 'unix'],
+    'quotes': ['warn', 'single'],
+    'semi': ['warn', 'always']
   }
 };
