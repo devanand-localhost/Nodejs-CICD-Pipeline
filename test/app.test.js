@@ -4,7 +4,7 @@ const request = require('supertest');
 const { app, server } = require('../server');
 
 describe('API Tests', () => {
-  // No need to start a server since we can use the app instance directly
+  // No need to start a server, use the app instance directly
   
   after((done) => {
     // Close the server after tests

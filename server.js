@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 
-// Routes that were previously in app.js
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from Node.js CI/CD Pipeline!' });
 });
