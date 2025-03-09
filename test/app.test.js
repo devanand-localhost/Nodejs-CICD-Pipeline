@@ -1,9 +1,16 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
-const { app, server } = require('../app');
+const app = require('../app');
 
 describe('API Tests', () => {
+  let server;
+  
+  before(() => {
+    // Starting a server for testing on a different port
+    server = app.listen(3001);
+  });
+
   after((done) => {
     server.close(done);
   });

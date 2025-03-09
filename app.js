@@ -9,4 +9,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'UP' });
 });
 
-module.exports = { app };
+// We export the app but don't start the server here
+// This allows us to import it in server.js and also in tests
+module.exports = app;
