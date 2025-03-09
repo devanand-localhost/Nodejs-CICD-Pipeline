@@ -1,26 +1,19 @@
-// eslint.config.js
-const nodeGlobals = require('globals/node');
-const mochaGlobals = require('globals/mocha');
-const es2021Globals = require('globals/es2021');
-const eslintRecommended = require('@eslint/js');
+const js = require("@eslint/js");
+const prettier = require("eslint-config-prettier");
 
 module.exports = [
+  js.configs.recommended,
   {
+    ignores: ["node_modules/", "dist/"],
     languageOptions: {
-      globals: {
-        ...nodeGlobals, // Node.js globals
-        ...mochaGlobals, // Mocha globals
-        ...es2021Globals, // ES2021 globals
-      },
-      ecmaVersion: 'latest',
+      ecmaVersion: "latest",
+      sourceType: "module",
     },
     rules: {
-      'no-console': 'off',
-      indent: ['warn', 2],
-      'linebreak-style': ['warn', 'unix'],
-      quotes: ['warn', 'single'],
-      semi: ['warn', 'always'],
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "eqeqeq": "error",
     },
   },
-  eslintRecommended.configs.recommended,
+  prettier
 ];
