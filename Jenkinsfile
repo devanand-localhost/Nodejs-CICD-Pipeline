@@ -69,18 +69,12 @@ pipeline {
             steps {
                 // Wait for the application to start
                 sh 'sleep 10'
-                
+
                 // Print container logs to debug
                 sh "docker logs ${CONTAINER_NAME}"
-        
-                // Use Docker host IP instead of localhost
-                sh 'curl -f http://host.docker.internal:3000/health || exit 1'
-                // Get the IP of the application container
-                script {
-                    def containerIp = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME}", returnStdout: true).trim()
-                    sh "curl -f http://${containerIp}:3000/health || exit 1"
-                }
-            }
+                
+                // Check if the application is healthy using the VM's IP
+        	sh 'curl -f http://192.168.178.129:3000/health || exit 1'            }
         }
     }
     

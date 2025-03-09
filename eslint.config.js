@@ -1,15 +1,19 @@
 // eslint.config.js
-module.exports = [
+import nodeGlobals from 'globals/node';
+import mochaGlobals from 'globals/mocha';
+import es2021Globals from 'globals/es2021';
+import eslintRecommended from '@eslint/js';
+
+export default [
   {
     languageOptions: {
       globals: {
-        ...require('globals').node, // Node.js globals
-        ...require('globals').mocha, // Mocha globals
-        ...require('globals').es2021, // ES2021 globals
+        ...nodeGlobals, // Node.js globals
+        ...mochaGlobals, // Mocha globals
+        ...es2021Globals, // ES2021 globals
       },
       ecmaVersion: 'latest',
     },
-    extends: 'eslint:recommended',
     rules: {
       'no-console': 'off',
       indent: ['warn', 2],
@@ -18,4 +22,5 @@ module.exports = [
       semi: ['warn', 'always'],
     },
   },
+  eslintRecommended.configs.recommended,
 ];
