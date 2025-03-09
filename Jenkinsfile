@@ -68,7 +68,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 // Wait for the application to start
-                sh 'sleep 20'
+                sh 'sleep 120'
 
                 // Print container logs to debug
                 sh "docker logs ${CONTAINER_NAME}"
