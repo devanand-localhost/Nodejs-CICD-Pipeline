@@ -60,8 +60,8 @@ pipeline {
                 sh "docker stop ${CONTAINER_NAME} || true"
                 sh "docker rm ${CONTAINER_NAME} || true"
                 
-                // Run the new container
-                sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                // Run the new container using host network so it's accessible from Jenkins
+                sh "docker run -d --network=host --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}"
             }
         }        
         
@@ -73,8 +73,9 @@ pipeline {
                 // Print container logs to debug
                 sh "docker logs ${CONTAINER_NAME}"
                 
-                // Check if the application is healthy using the VM's IP
-        	sh 'curl -f http://192.168.178.129:3000/health || exit 1'            }
+                // Check if the application is healthy
+                sh 'curl -f http://localhost:3000/health || exit 1'           
+		}
         }
     }
     
